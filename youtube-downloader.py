@@ -157,7 +157,7 @@ btDownload = Button(win, text = "Herunterladen", command = btDownloadClick)
 btDownload.configure(height = 3, width = 50)
 btDownload.place(relx = 0.5, rely = 0.8, anchor = CENTER)
 
-lbAuthor = Label(win, text = "Copyright © Giczi Oliver 2020")
+lbAuthor = Label(win, text = "Oliver Giczi")
 lbAuthor.place(relx = 0.5, rely = 0.94, anchor = CENTER)
 
 win.mainloop()
