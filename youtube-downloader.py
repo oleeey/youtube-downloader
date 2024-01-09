@@ -1,22 +1,7 @@
-"""
-Oliver Giczi, 7B
-Programm zum Herunterladen von Youtube-Videos
-
-
-geändert:
-- Benutzer kann nun auswählen, wo Datei gespeichert wird
-- bei Schließen des Programmes wird thumbnail-Datei gelöscht
-- nun kann man die Datei auch in .mp3 Format speichern
-- Auswahl der Auflösung bei Video (360p und 720p) // geplant war auch 480p und 1080p, funktioniert aber nicht
-- Logging (Datum, Dateiname, Speicherort und Dateigröße)
-"""
-
-
-# FF: vorher pytube3 installieren (pip3)
-
+# vorher pytube3 installieren (pip3)
 
 from tkinter import *                       # Importieren der benötigten Bibliotheken
-from tkinter import simpledialog, filedialog
+from tkinter import filedialog
 from pytube import YouTube
 import urllib.request
 from PIL import Image
@@ -65,7 +50,7 @@ def btDownloadClick():  # Video herunterladen;
 
     saveData(video)
 
-def btSaveLocClick():      # Benuter wählt Ordner aus, wo er Datei speichern möchte
+def btSaveLocClick():      # Benutzer wählt Ordner aus, wo er Datei speichern möchte
     os.chdir(str(filedialog.askdirectory()))
 
 
@@ -94,11 +79,9 @@ def saveData(video):    # die Daten werden in einer csv-Datei gespeichert
             f.write(wort + ";")
 
         f.write("\n")
-
         f.close()
 
     f = open(log_name, "a")
-
 
     daten = [titel, datum, save_loc, data_size]
 
@@ -107,8 +90,6 @@ def saveData(video):    # die Daten werden in einer csv-Datei gespeichert
 
     f.write("\n")
     f.close()
-
-
 
     f = open(log_name)
     lines = []
@@ -128,11 +109,7 @@ def saveData(video):    # die Daten werden in einer csv-Datei gespeichert
     for line in new_lines:
         f.write(line)
 
-
-
-
 win = Tk()		# Hauptfenster
-
 
 win.title("Youtube-Downloader")		# Fenstertitel
 
@@ -175,7 +152,6 @@ btSaveLoc.place(relx = 0.5, rely = 0.62, anchor = CENTER)
 
 lbLine = Label(win, text = ("="*100), bg = bgColor, font = "Helvetica 15")
 lbLine.place(relx = 0.5, rely = 0.7, anchor = CENTER)
-
 
 btDownload = Button(win, text = "Herunterladen", command = btDownloadClick)
 btDownload.configure(height = 3, width = 50)
