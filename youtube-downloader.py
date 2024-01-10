@@ -163,4 +163,6 @@ lbAuthor.place(relx = 0.5, rely = 0.94, anchor = CENTER)
 win.mainloop()
 
 os.chdir(old_dir)
-os.remove("thumbnail.gif")
+path = "thumbnail.gif"
+if os.path.isfile(path):
+    os.remove("thumbnail.gif")
