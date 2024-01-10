@@ -8,5 +8,11 @@ Programm, mit welchem man Youtube-Videos herunterladen kann. Dabei kann man entw
 
 ![ezgif com-gif-maker](https://user-images.githubusercontent.com/117094162/211641911-2f7d1657-f0a4-41c5-bf8a-69b9d61ed88f.gif)
 
-# Benutzte Werkzeuge:
-- Python
+# Benutzte Bibliotheken:
+- pytube
+- tkinter
+- urllib
+- PIL
+- os
+- datetime
+  
