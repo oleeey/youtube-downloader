@@ -1,122 +1,57 @@
-# vorher pytube3 installieren (pip3)
-
-from tkinter import *                       # Importieren der benötigten Bibliotheken
+from tkinter import *                      
 from tkinter import filedialog
 from pytube import YouTube
 import urllib.request
 from PIL import Image
-import os
-from datetime import date
+import os, re
 
 old_dir = os.getcwd()
 
 def btSuchenClick():
     global thumbnail, yt
+    # Eingabe in YT-Link umwandeln
+    yt = YouTube(tLink.get())           
 
-    yt = YouTube(tLink.get())           # Eingabe in YT-Link umwandeln
-
+    # Thumbnail des Videos herunterladen und zeigen; wird nach dem Schließen des Programmes automatisch gelöscht (unten)
     thumbnail_url = yt.thumbnail_url
     
-    urllib.request.urlretrieve(thumbnail_url, "thumbnail.gif")     # Thumbnail des Videos herunterladen
+    urllib.request.urlretrieve(thumbnail_url, "thumbnail.gif")     
 
     imageFile = "thumbnail.gif"
     im = Image.open(imageFile)
     im = im.resize((200, 200), Image.ANTIALIAS)
     im.save("thumbnail.gif")
     thumbnail = PhotoImage(file = "thumbnail.gif")
-    canv.create_image(50, 50, image = thumbnail, anchor = CENTER)       # Thumbnail des Videos zeigen
+    canv.create_image(50, 50, image = thumbnail, anchor = CENTER)
 
-
-def btDownloadClick():  # Video herunterladen;
+def btDownloadClick():
     global data_format
     data_format = options.get()
 
-    if data_format == ".mp3 (Audio)":       # wenn der Benutzer .mp3 Datei haben möchte;
+    if data_format == ".mp3 (Audio)":       
         video = yt.streams.filter(only_audio=True).first()
-
-        if not os.path.exists(video.title + ".mp3"):
-
-            video.download()
-            os.rename(video.title + ".mp4", video.title + ".mp3")
-
-
-    if "360p" in data_format:            # wenn der Benutzer .mp4 Datei haben möchte; 360p
-        video = yt.streams.get_by_resolution("360p")
         video.download()
-
-    if "720p" in data_format:               # 720p
-        video = yt.streams.get_by_resolution("720p")
-        video.download()
-
-    saveData(video)
-
-def btSaveLocClick():      # Benutzer wählt Ordner aus, wo er Datei speichern möchte
-    os.chdir(str(filedialog.askdirectory()))
-
-
-def saveData(video):    # die Daten werden in einer csv-Datei gespeichert
-    titel = video.title
-
-    datum = date.today()
-    datum = datum.strftime("%d/%m/%Y")
-
-    save_loc = os.getcwd()
-
-    if ".mp3" in data_format:
-        file_stats = os.stat(titel + ".mp3")
+        # einfachste lösung, da es in pytube nicht möglich ist, direkt als mp3 herunterzuladen
+        os.rename(video.title + ".mp4", video.title + ".mp3")
 
     else:
-        file_stats = os.stat(titel + ".mp4")
+        res = re.search(r"\d{3}p", data_format)
+        video = yt.streams.get_by_resolution(res.group())
+        video.download()
 
-    data_size = str(round(file_stats.st_size / (1024 * 1024), 2)) + " MB"
+# Benutzer wählt Ordner aus, wo Datei gespeichert werden sollte
+def btSaveLocClick():      
+    os.chdir(str(filedialog.askdirectory()))
 
-    log_name = "youtube_log.csv"
+win = Tk()		
+win.title("Youtube-Downloader")		
 
-    if not os.path.exists(log_name):
-        f = open(log_name, "w")
-        worte = ["Titel", "Datum", "Speicherort", "Dateigröße"]
-        for wort in worte:
-            f.write(wort + ";")
-
-        f.write("\n")
-        f.close()
-
-    f = open(log_name, "a")
-
-    daten = [titel, datum, save_loc, data_size]
-
-    for datei in daten:
-        f.write(datei + ";")
-
-    f.write("\n")
-    f.close()
-
-    f = open(log_name)
-    lines = []
-    for line in f:
-        lines.append(line)
-
-    f.close()
-
-    new_lines = []
-
-    for line in lines:
-        if line not in new_lines:
-            new_lines.append(line)
-
-    f = open(log_name, "w")
-
-    for line in new_lines:
-        f.write(line)
-
-win = Tk()		# Hauptfenster
-
-win.title("Youtube-Downloader")		# Fenstertitel
-
-bgColor = "#E0F1F7"     # Hintergrundfarbe 1
-bgColor1 = "#809fff"    # Hintergrundfarbe 2
-
-win.geometry("600x500")		# Größe des Fensters
+# Hintergrundfarbe 1
+bgColor = "#E0F1F7"    
+# Hintergrundfarbe 2 
+bgColor1 = "#809fff"    
+# Größe des Fensters
+win.geometry("600x500")		
 
 win.configure(background = bgColor)
 
